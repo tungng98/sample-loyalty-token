@@ -16,8 +16,8 @@ abstract contract VRC25 is IVRC25, IERC165 {
     using SafeMath for uint256;
 
     // The order of _balances, _minFeem, _issuer must not be changed to pass validation of gas sponsor application
-    mapping (address => uint256) private _balances;
-    uint256 private _minFee;
+    mapping (address => uint256) internal _balances;
+    uint256 internal _minFee;
     address private _owner;
     address private _newOwner;
 
@@ -26,7 +26,7 @@ abstract contract VRC25 is IVRC25, IERC165 {
     string private _name;
     string private _symbol;
     uint8 private _decimals;
-    uint256 private _totalSupply;
+    uint256 internal _totalSupply;
 
     event FeeUpdated(uint256 fee);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -72,7 +72,7 @@ abstract contract VRC25 is IVRC25, IERC165 {
     /**
      * @notice Returns the amount of tokens in existence.
      */
-    function totalSupply() public view override returns (uint256) {
+    function totalSupply() public virtual view override returns (uint256) {
         return _totalSupply;
     }
 
@@ -81,7 +81,7 @@ abstract contract VRC25 is IVRC25, IERC165 {
      * @param owner The address to query the balance of.
      * @return An uint256 representing the amount owned by the passed address.
      */
-    function balanceOf(address owner) public view override returns (uint256) {
+    function balanceOf(address owner) public virtual view override returns (uint256) {
         return _balances[owner];
     }
 
@@ -248,7 +248,7 @@ abstract contract VRC25 is IVRC25, IERC165 {
      * @param to The address to transfer to.
      * @param amount The amount to be transferred.
      */
-    function _transfer(address from, address to, uint256 amount) internal {
+    function _transfer(address from, address to, uint256 amount) internal virtual {
         require(from != address(0), "VRC25: transfer from the zero address");
         require(to != address(0), "VRC25: transfer to the zero address");
         require(amount <= _balances[from], "VRC25: insuffient balance");
@@ -308,7 +308,7 @@ abstract contract VRC25 is IVRC25, IERC165 {
      * @param from The account that token amount will be deducted.
      * @param amount The amount that will be burned.
      */
-    function _burn(address from, uint256 amount) internal {
+    function _burn(address from, uint256 amount) internal virtual {
         require(from != address(0), "VRC25: burn from the zero address");
         require(amount <= _balances[from], "VRC25: insuffient balance");
         _totalSupply = _totalSupply.sub(amount);
